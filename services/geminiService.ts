@@ -80,7 +80,7 @@ function extractGroundingLinks(response: any): GroundingLink[] {
 }
 
 export async function findFIRByCrimeNumber(crimeNumber: string, policeStation: string): Promise<{ text: string, groundingLinks: GroundingLink[] }> {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
   const prompt = `Search and find details for FIR / Crime Number: "${crimeNumber}" at "${policeStation}" Police Station. Summarize the alleged charges, the date of incident, and the current status if available.`;
   
   const response = await ai.models.generateContent({
@@ -103,7 +103,7 @@ export async function analyzeFIR(
   lawBook: FileData | string | null, 
   suspect: Suspect
 ): Promise<AnalysisResult> {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
   
   const parts: any[] = [];
   
@@ -156,7 +156,7 @@ export async function chatWithGemini(
   lawBook: FileData | string | null,
   suspect: Suspect | null
 ): Promise<{ text: string, groundingLinks: GroundingLink[] }> {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
   const contents = history.map(m => ({
     role: m.role === 'assistant' ? 'model' : 'user',
     parts: [{ text: m.content }]
@@ -196,7 +196,7 @@ export async function chatWithGemini(
 }
 
 export async function generateSpeech(text: string): Promise<string> {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash-preview-tts",
     contents: [{ parts: [{ text }] }],
