@@ -1,0 +1,7 @@
+{
+  "name": "Copy of LOOPHOLES.CLAIMS",
+  "description": "An AI-powered legal tool to analyze FIR copies against the Bharatiya Nyaya Sanhita 2023 to identify potential legal loopholes, procedural inconsistencies, and defense strategies for specific suspects.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
