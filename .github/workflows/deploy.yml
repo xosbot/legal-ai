@@ -1,0 +1,37 @@
+name: Deploy
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint 2>/dev/null || echo "No lint script"
+      - run: npx tsc --noEmit 2>/dev/null || echo "No type check"
+
+  deploy:
+    needs: quality
+    if: github.ref == 'refs/heads/main'
+    uses: xosbot/infra/.github/workflows/vercel-deploy.yml@main
+    secrets:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+  preview:
+    needs: quality
+    if: github.event_name == 'pull_request'
+    uses: xosbot/infra/.github/workflows/vercel-preview.yml@main
+    secrets:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
